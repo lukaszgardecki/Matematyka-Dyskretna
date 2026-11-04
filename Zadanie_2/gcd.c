@@ -10,16 +10,16 @@
 #define jestTerminalem() isatty(STDIN_FILENO)
 #endif
 
-typedef struct {
+typedef struct Krok {
     int dzielna;
     int iloraz;
     int dzielnik;
     int reszta;
+    struct Krok *nastepny;
 } Krok;
 
 typedef struct {
-    Krok tab[100];
-    int top;
+    Krok *top;
 } StosKrokow;
 
 typedef struct {
@@ -29,32 +29,29 @@ typedef struct {
     int y;
 } Wynik;
 
-void push(StosKrokow *stos, Krok krok) {
-    if (stos->top < 100) {
-        stos->tab[stos->top] = krok;
-        stos->top++;
-    }
-}
-
-Krok pop(StosKrokow *s) {
-    if (s->top > 0) {
-        s->top--;
-        return s->tab[s->top];
-    }
-    Krok pusty = {0, 0, 0, 0};
-    return pusty;
-}
-
 bool czyPusty(const StosKrokow *stos) {
-    return stos->top == 0;
+    return stos->top == NULL;
 }
 
-Krok topEl(const StosKrokow *stos) {
-    if (stos->top > 0) {
-        return stos->tab[stos->top - 1];
-    }
-    Krok pusty = {0, 0, 0, 0};
-    return pusty;
+void push(StosKrokow *stos, Krok krok) {
+    Krok *nowy = malloc(sizeof(Krok));
+    if (nowy == NULL) return;
+
+    *nowy = krok;
+    nowy->nastepny = stos->top;
+    stos->top = nowy;
+}
+
+Krok pop(StosKrokow *stos) {
+    if (czyPusty(stos)) return (Krok){0, 0, 0, 0, NULL};
+
+    Krok *temp = stos->top;
+    Krok krok = *temp;
+    stos->top = temp->nastepny;
+
+    free(temp);
+    krok.nastepny = NULL;
+    return krok;
 }
 
 Wynik stworzWynik(Krok krok) {
@@ -64,6 +61,14 @@ Wynik stworzWynik(Krok krok) {
     w.y = -krok.iloraz;
     w.b = krok.dzielnik;
     return w;
+}
+
+void zakonczEnterem(const char *komunikat) {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF) {}
+
+    if (komunikat != NULL) printf("%s", komunikat);
+    getchar();
 }
 
 void przeliczWspolczynniki(Wynik *wynik, Krok krok) {
@@ -124,14 +129,14 @@ void wypiszRozwiazanieZCzarnejRamki(const Wynik *wynik, const int nwd) {
 
 void przetworzPareDanych(int a, int b) {
     int tmpA = a, tmpB = b;
-    StosKrokow stos = { .top = 0 };
+    StosKrokow stos = { .top = NULL };
 
     while (b != 0) {
         int reszta = a % b;
         if (reszta == 0) break;
         int iloraz = a / b;
 
-        Krok krok = {a, iloraz, b, reszta};
+        Krok krok = {a, iloraz, b, reszta, NULL};
         push(&stos, krok);
 
         a = b;
@@ -154,8 +159,6 @@ void przetworzPareDanych(int a, int b) {
     wypiszRozwiazanieZCzarnejRamki(&wynik, nwd);
 }
 
-
-
 int main(void) {
     int a, b;
 
@@ -166,6 +169,8 @@ int main(void) {
         if (scanf("%d", &b) != 1) return 1;
 
         przetworzPareDanych(a, b);
+
+        zakonczEnterem("Naciśnij Enter, aby zakończyć...");
     } else {
         int iloscWierszy;
         if (scanf("%d", &iloscWierszy) == 1) {
