@@ -1,0 +1,15 @@
+# TITLE=PERMUTACJA|KOMBINACJA|WARIACJA_Z_POWTÓRZENIAMI|WARIACJA_BEZ_POWTÓRZEŃ
+TITLE=PERMUTACJA
+GENERATE_ALL_SETS=TRUE
+#
+# Jeśli w TITLE jest PERMUTACJA to K_ELEMENTS=N, można użyć tę równość jako warunek poprawności danych dla permutacji albo pominąć interpretację K_ELEMENTS, bo zawsze musi być równe N dla permutacji.
+K_ELEMENTS=4
+#
+# CARD_OF_SET=N będzie symbolizować liczbę elementów zbioru, jego moc zbioru, liczebność. Zbiór może posiadać elementy będące łańcuchami znaków (strings).
+CARD_OF_SET=4
+#
+# Elementy zbioru:
+Katowice
+Kraków
+Warszawa
+Wrocław

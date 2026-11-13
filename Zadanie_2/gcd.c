@@ -29,6 +29,7 @@ typedef struct {
     int y;
 } Wynik;
 
+
 bool czyPusty(const StosKrokow *stos) {
     return stos->top == NULL;
 }

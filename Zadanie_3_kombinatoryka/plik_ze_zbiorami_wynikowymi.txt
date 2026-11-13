@@ -1,0 +1,7 @@
+TOTAL=6
+[1] Katowice, Kraków, Warszawa
+[2] Katowice, Warszawa, Kraków
+[3] Kraków, Katowice, Warszawa
+[4] Kraków, Warszawa, Katowice
+[5] Warszawa, Katowice, Kraków
+[6] Warszawa, Kraków, Katowice
